@@ -1,0 +1,14 @@
+测试服务提供者的方式：
+Spring MVC和java main
+
+Spring MVC：
+入口类是com.ztesoft.demo.consumer.ConsumerWeb.login()
+在浏览器敲入的URL为 http://localhost:8080/dubboClient/lifeApp?method=login
+
+java main：
+入口类是com.ztesoft.demo.consumer.ConsumerClient.main(String[])
+
+我们的项目都没有使用Spring MVC；
+比如使用和服务提供者一样的服务接口；
+在自己的工程里引入lib下的jar包；
+参考ConsumerWeb，通过spring注解将远程服务类注入到自己的服务类里；

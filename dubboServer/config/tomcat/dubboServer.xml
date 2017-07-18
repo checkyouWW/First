@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context crossContext="true" docBase="E:\Workspaces\MyEclipse 8.5\dubboServer\WebContent" path="" reloadable="false">
+	<Resource name="jdbc/lifedb" auth="Container" type="javax.sql.DataSource"
+		maxActive="50" maxIdle="30" maxWait="10000" logAbandoned="true"
+		username="channel" password="channel" driverClassName="oracle.jdbc.driver.OracleDriver"
+		url="jdbc:oracle:thin:@10.45.47.18:1521:bigdata" />
+</Context>

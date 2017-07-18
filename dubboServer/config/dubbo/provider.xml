@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://code.alibabatech.com/schema/dubbo
+		http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+ 
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <dubbo:application name="dubbo-provider-app"  />
+    
+	<!-- 服务提供超时时间15秒，失败后重试0次 -->
+	<dubbo:provider timeout="15000" retries="0" filter="dubboFilter"/>
+	
+    <!-- 使用zookeeper注册中心。“check”：注册中心不存在时，是否报错。 -->
+    <dubbo:registry protocol="zookeeper" address="zookeeper://127.0.0.1:2181" check="false"/>
+ 
+    <!-- 用dubbo协议在20881端口暴露服务 -->
+	<!-- dubbo协议使用长连接和nio，accepts=1000  表示为了防止同时过来大量连接而被干掉，限制最大为1000。这是一种服务端的自我保护措施-->
+	<dubbo:protocol name="dubbo" port="20881" accepts="1000" />
+ 
+    <!-- 声明需要暴露的服务接口 -->
+    
+    <dubbo:service ref="loginService" interface="com.ztesoft.inf.mp.sys.ILoginService" timeout="15000" >
+    	<!-- 登录 -->
+		<dubbo:method name="loginPost" timeout="15000" />
+    </dubbo:service>
+	
+	<dubbo:service ref="menuMgrService" interface="com.ztesoft.inf.mp.sys.IMenuMgrService" />
+	<dubbo:service ref="attrService" interface="com.ztesoft.inf.common.IAttrService" />
+	<dubbo:service ref="orgMgrService" interface="com.ztesoft.inf.mp.sys.IOrgMgrService" timeout="60000" />
+    <dubbo:service ref="noticeService" interface="com.ztesoft.inf.mp.sys.INoticeService" />
+    <dubbo:service ref="dataMgrService" interface="com.ztesoft.inf.mp.data.IDataMgrService" />
+    <dubbo:service ref="mainService" interface="com.ztesoft.inf.mp.sys.IMainService" />
+    <dubbo:service ref="dataApplyService" interface="com.ztesoft.inf.sp.data.IDataApplyService" />
+	<dubbo:service ref="algorithmService" interface="com.ztesoft.inf.mp.data.IAlgorithmMgrService" />
+    <dubbo:service ref="catalogMgrService" interface="com.ztesoft.inf.mp.data.ICatalogMgrService" />
+    <dubbo:service ref="dataHallService" interface="com.ztesoft.inf.sp.data.IDataHallService" />
+    <dubbo:service ref="staffService" interface="com.ztesoft.inf.mp.sys.IStaffService" />
+
+    <dubbo:service ref="taskHallService" interface="com.ztesoft.inf.sp.task.ITaskHallService"/>
+    <dubbo:service ref="workSpaceService" interface="com.ztesoft.inf.sp.workspace.IWorkSpaceService"/>
+    <dubbo:service ref="dataGuardService" interface="com.ztesoft.inf.mp.data.IDataGuardService" />
+    <dubbo:service ref="auditMgrService" interface="com.ztesoft.inf.mp.audit.IAuditMgrService" />
+    <dubbo:service ref="dataUsedApplyService" interface="com.ztesoft.inf.sp.workspace.IDataUsedApplyService" />
+    <dubbo:service ref="privilegeService" interface="com.ztesoft.inf.mp.sys.IPrivilegeService" />
+    <dubbo:service ref="roleService" interface="com.ztesoft.inf.mp.sys.IRoleService" />
+    <dubbo:service ref="bdRoleService" interface="com.ztesoft.inf.mp.sys.IBdRoleService" timeout="120000" />
+    <dubbo:service ref="taskMgrService" interface="com.ztesoft.inf.mp.task.ITaskMgrService" />
+    <dubbo:service ref="tenantMgrService" interface="com.ztesoft.inf.mp.task.ITenantMgrService" />
+    <dubbo:service ref="countAccuService" interface="com.ztesoft.inf.common.ICountAccuService" />
+    <dubbo:service ref="taskService" interface="com.ztesoft.inf.mp.task.ITaskService" />
+    <dubbo:service ref="taskScheduleService" interface="com.ztesoft.inf.mp.task.ITaskScheduleService" timeout="60000" />
+    <dubbo:service ref="dataScheduleService" interface="com.ztesoft.inf.se.data.IDataScheduleService" timeout="60000" />
+    <dubbo:service ref="jobMgrService" interface="com.ztesoft.inf.mp.sys.IJobMgrService" />
+    <dubbo:service ref="cacheService" interface="com.ztesoft.inf.mp.sys.ICacheService" />
+    <dubbo:service ref="sysConfigService" interface="com.ztesoft.inf.common.ISysConfigService" />
+    <dubbo:service ref="ftpService" interface="com.ztesoft.inf.mp.sys.IFtpService" />
+    <dubbo:service ref="loggerService" interface="com.ztesoft.inf.se.data.ILoggerService" />
+    <dubbo:service ref="tableMappingService" interface="com.ztesoft.inf.mp.data.ITableMappingService" />
+    <dubbo:service ref="dataSynOrderService" interface="com.ztesoft.inf.mp.data.IDataSynOrderService" />
+
+    <!-- 和本地bean一样实现服务 -->
+    <bean id="loginService" class="com.ztesoft.dubbo.mp.sys.service.LoginService" />
+	<bean id="menuMgrService" class="com.ztesoft.dubbo.mp.sys.service.MenuMgrService" />
+	<bean id="orgMgrService" class="com.ztesoft.dubbo.mp.sys.service.OrgMgrService" />
+	<bean id="attrService" class="com.ztesoft.dubbo.common.AttrService" />
+    <bean id="dataMgrService" class="com.ztesoft.dubbo.mp.data.service.DataMgrService" />
+    <bean id="mainService" class="com.ztesoft.dubbo.mp.main.service.MainService" />
+    <bean id="dataApplyService" class="com.ztesoft.dubbo.sp.data.service.DataApplyService" />
+    <bean id="algorithmService" class="com.ztesoft.dubbo.mp.data.service.AlgorithmService" />
+    <bean id="catalogMgrService" class="com.ztesoft.dubbo.mp.data.service.CatalogMgrService" />
+    <bean id="dataHallService" class="com.ztesoft.dubbo.sp.data.service.DataHallService" />
+	<bean id="dataUsedApplyService" class="com.ztesoft.dubbo.sp.workspace.service.DataUsedApplyService" />
+	<bean id="dataGuardService" class="com.ztesoft.dubbo.mp.data.service.DataGuardService" />
+	<bean id="auditMgrService" class="com.ztesoft.dubbo.mp.audit.service.AuditMgrService" />
+	<bean id="privilegeService" class="com.ztesoft.dubbo.mp.sys.service.PrivilegeService" />
+	<bean id="RoleService" class="com.ztesoft.dubbo.mp.sys.service.RoleService" />
+	<bean id="BdRoleService" class="com.ztesoft.dubbo.mp.sys.service.BdRoleService" />
+	<bean id="taskMgrService" class="com.ztesoft.dubbo.mp.task.service.TaskMgrService" />
+	<bean id="tenantMgrService" class="com.ztesoft.dubbo.mp.task.service.TenantMgrService" />
+	<bean id="countAccuService" class="com.ztesoft.dubbo.common.CountAccuService" />
+	<bean id="taskService" class="com.ztesoft.dubbo.mp.task.service.TaskService" />
+	<bean id="taskScheduleService" class="com.ztesoft.dubbo.mp.task.service.TaskScheduleService" />
+	<bean id="dataScheduleService" class="com.ztesoft.dubbo.se.data.service.DataScheduleService" />
+	<bean id="jobMgrService" class="com.ztesoft.dubbo.mp.sys.service.JobMgrService" />
+	<bean id="cacheService" class="com.ztesoft.dubbo.mp.sys.service.CacheService" />
+	<bean id="sysConfigService" class="com.ztesoft.dubbo.common.SysConfigService" />
+	<bean id="ftpService" class="com.ztesoft.dubbo.mp.sys.service.FtpService" />
+	<bean id="loggerService" class="com.ztesoft.dubbo.se.data.service.LoggerService" />
+	<bean id="tableMappingService" class="com.ztesoft.dubbo.mp.data.service.TableMappingService" />
+	<bean id="dataSynOrderService" class="com.ztesoft.dubbo.mp.data.service.DataSynOrderService" />
+	
+</beans>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<!-- Appenders -->
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ABSOLUTE} %5p %c{1}:%L - %m%n" />
+		</layout>
+	</appender>
+
+	<!--记录dubbo服务的调用时间 joshui TODO @joshui 后面需要去掉 -->
+	<appender name="dubboInvokeAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<!--在tomcat启动或者standalone启动时，需要指定log4jRootPath参数。例如 -Dlog4jRootPath=/Users/jianghui/Downloads/tmp -->
+		<param name="File" value="${log4jRootPath}/home/dubbo/invoke.log" />
+		<!--是否追加写入文件 true-是 false-否,此部分不建议改动 -->
+		<param name="Append" value="true" />
+		<!--当日志文件超过定义数值则自动备分一个新文件 -->
+		<!--可以定义为1MB,1KB,1GB这样的类型,也可以定义为1000则表示1000字节 -->
+		<param name="MaxFileSize" value="10MB" />
+		<!--备分文件最多的数量 -->
+		<param name="MaxBackupIndex" value="1000" />
+		<!--输出的日志文件格式,根据操作系统编码指定 -->
+		<param name="Encoding" value="UTF8" />
+		<!--log4j的打印日志布局,可参考相关log4j文档设置 -->
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%p][%d{ISO8601}][%c][%m]%n" />
+		</layout>
+
+		<!--日志级别过滤器 -->
+		<!--过滤器设置输出的级别 -->
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="levelMin" value="error" />
+			<param name="levelMax" value="error" />
+			<param name="AcceptOnMatch" value="true" />
+		</filter>
+	</appender>
+
+	<!-- dubbo调用耗时记录loger，上生产时，需要将日志级别改为debug以上，这样就不会打印出日志记录了 joshui TODO @joshui 
+		后面需要去掉 -->
+	<logger name="com.ztesoft.dubbo.utils.CountExeTimeAop">
+		<level value="error" />
+		<appender-ref ref="dubboInvokeAppender" />
+		<!-- <appender-ref ref="console" /> -->
+	</logger>
+
+	<logger name="com.ztesoft">
+		<level value="error" />
+	</logger>
+
+	<logger name="org.springframework.core">
+		<level value="error" />
+	</logger>
+
+	<logger name="org.springframework.beans">
+		<level value="error" />
+	</logger>
+
+	<logger name="org.springframework.context">
+		<level value="error" />
+	</logger>
+
+	<logger name="org.springframework.web">
+		<level value="error" />
+	</logger>
+
+	<!-- Root Logger -->
+	<root>
+		<priority value="error" />
+		<appender-ref ref="console" />
+	</root>
+
+</log4j:configuration>

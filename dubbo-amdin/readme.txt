@@ -1,0 +1,1 @@
+在/dubbo-amdin/WebContent/WEB-INF/dubbo.properties配置zookeeper注册中心地址、后台管理员密码

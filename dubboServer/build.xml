@@ -1,0 +1,130 @@
+﻿<project basedir="." default="all" name="dubboServer">
+
+	<!-- 项目路径 -->
+	<property name="project.dir" value="."/>
+	<!-- 打包日志路径 -->
+	<property name="buildlog.dir" value="${project.dir}/build/log"/>
+	<!-- war包路径及名字 -->
+	<property name="deploy.dir" value="${project.dir}/build/dubboServer.war"/>
+
+	<!-- 这里是weblogic lib的目录, 换成本机的目录 -->
+	<property name="weblogiclib" value="C:\jdk1.7\bin"/>
+	<property name="subject" value="Dailybuild Report"/>
+
+	<!-- web项目源代码路径 -->
+	<property name="source.dir" value="${project.dir}/src;${project.dir}/config;${project.dir}/framework;${project.dir}/rpc;${project.dir}/bpm;"/>
+
+	<path id="project.class.path">
+		<fileset dir="${project.dir}/WebContent/WEB-INF/lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+
+	<target name="init">
+		<!--delete failonerror="false" includeEmptyDirs="true">
+			<fileset dir="${project.dir}/build"/>
+		</delete-->
+		<mkdir dir="${project.dir}/build"/>
+		<mkdir dir="${project.dir}/build/log"/>
+		<delete failonerror="false" includeEmptyDirs="true">
+			<fileset dir="${project.dir}/WebContent/WEB-INF/classes"/>
+		</delete>	
+		<mkdir dir="${project.dir}/WebContent/WEB-INF/classes"/>
+	</target>
+
+	<target name="buildWeb" depends="">
+		<mkdir dir="${project.dir}/WebContent/WEB-INF/bin"/>
+		<record name="${buildlog.dir}/build.txt" action="start"/>
+		<copy todir="${project.dir}/WebContent/WEB-INF/bin">
+			<fileset dir="${project.dir}/config">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dir}/WebContent/WEB-INF/bin">
+			<fileset dir="${project.dir}/framework">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dir}/WebContent/WEB-INF/bin">
+			<fileset dir="${project.dir}/rpc">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dir}/WebContent/WEB-INF/bin">
+			<fileset dir="${project.dir}/src">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${project.dir}/WebContent/WEB-INF/bin">
+			<fileset dir="${project.dir}/bpm">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+		<echo message="Compiling the source code!" />
+		<javac srcdir="${project.dir}/WebContent/WEB-INF/bin" destdir="${project.dir}/WebContent/WEB-INF/classes" memoryInitialSize="128m" 
+			memoryMaximumSize="512m" fork="true" failonerror="true" debug="true" nowarn="true" includeantruntime="on">
+			<compilerarg line="-encoding UTF-8 "/>
+			<classpath refid="project.class.path"/>
+		</javac>
+		<delete failonerror="false" includeEmptyDirs="true">
+			<fileset dir="${project.dir}/WebContent/WEB-INF/bin" />
+		</delete>
+		<echo message="Compiling the source code!" />
+
+		<copy todir="${project.dir}/WebContent/WEB-INF/classes">
+
+			<fileset dir="${project.dir}/src">
+				<include name="**/*.js"/>
+				<include name="**/*.ftl"/>
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+				<include name="**/*.html"/>
+			</fileset>
+
+			<fileset dir="${project.dir}/config">
+				<include name="**/*.js"/>
+				<include name="**/*.ftl"/>
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+				<include name="**/*.html"/>
+				<include name="**/*.xsd"/>
+				<include name="**/*.Filter"/>
+			</fileset>
+
+			<fileset dir="${project.dir}/rpc">
+				<include name="**/*.js" />
+				<include name="**/*.ftl" />
+				<include name="**/*.properties" />
+				<include name="**/*.xml" />
+				<include name="**/*.html" />
+			</fileset>
+			<fileset dir="${project.dir}/framework">
+				<include name="**/*.js" />
+				<include name="**/*.ftl" />
+				<include name="**/*.properties" />
+				<include name="**/*.xml" />
+				<include name="**/*.html" />
+			</fileset>
+			<fileset dir="${project.dir}/bpm">
+				<include name="**/*.js" />
+				<include name="**/*.ftl" />
+				<include name="**/*.properties" />
+				<include name="**/*.xml" />
+				<include name="**/*.html" />
+			</fileset>
+		</copy>
+		<war compress="false" destfile="${deploy.dir}" webxml="${project.dir}/WebContent/WEB-INF/web.xml">
+			<zipfileset dir="${project.dir}/WebContent">
+				<exclude name="**/j2ee.jar" />
+			</zipfileset>
+		</war>
+		<record name="${buildlog.dir}/build.txt" action="stop"/>
+	</target>
+
+	<!-- all target -->
+	<!-- build的顺序以下面的顺序为准 -->
+	<target name="all" depends="init,buildWeb">
+
+	</target>
+
+</project>
